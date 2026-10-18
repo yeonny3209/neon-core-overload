@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>네온 코어 디펜스: 오버로드 — 전작보다 모든 게 더 좋아졌다</title>
+<meta name="description" content="5분 만에 한 판, 그런데 멈출 수 없다. 방어탑 갈래 진화, 거대 보스, 캠페인 18스테이지로 돌아온 네온 코어 디펜스 후속작.">
+<meta name="theme-color" content="#05070f">
+<style>
+@font-face{font-family:'Orbitron';font-weight:400 900;font-display:block;src:url(data:font/woff2;base64,{{FONT}}) format('woff2')}
+:root{--bg:#05070f;--panel:rgba(14,22,44,.82);--edge:rgba(120,170,255,.2);--ice:#eaf4ff;--mute:#9fb2d4;--dim:#61739a;
+ --core:#2fe0ff;--mag:#ff4fd8;--gold:#ffc247;--bad:#ff4d6d;--good:#5ef2a4;
+ --font:'Pretendard','Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',system-ui,sans-serif;--fd:'Orbitron',var(--font)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ice);font-family:var(--font);line-height:1.6;overflow-x:hidden;
+ background-image:radial-gradient(1000px 600px at 15% -5%,rgba(47,224,255,.1),transparent 60%),radial-gradient(900px 600px at 95% 15%,rgba(255,79,216,.09),transparent 60%)}
+a{color:inherit;text-decoration:none}
+.wrap{width:min(1120px,calc(100% - 40px));margin:0 auto}
+section{padding:84px 0}
+.kicker{font-family:var(--fd);letter-spacing:.34em;font-size:12px;color:var(--core);font-weight:700}
+h1,h2,h3{margin:0;line-height:1.2}
+h2{font-size:clamp(28px,4.6vw,46px);font-weight:900;margin-top:10px}
+.lead{color:var(--mute);max-width:62ch;margin:14px 0 0;font-size:16.5px}
+.grad{background:linear-gradient(90deg,#2fe0ff,#a98bff,#ff4fd8);-webkit-background-clip:text;background-clip:text;color:transparent}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:15px 28px;border-radius:14px;font-weight:800;font-size:16px;border:1px solid var(--edge);
+ background:rgba(255,255,255,.05);transition:transform .15s,box-shadow .15s,background .15s;cursor:pointer;color:var(--ice);font-family:inherit}
+.btn:hover{transform:translateY(-2px);background:rgba(255,255,255,.09)}
+.btn.p{background:linear-gradient(180deg,#5af0ff,#18b9e0);color:#03202b;border:0;box-shadow:0 14px 40px -14px var(--core)}
+.btn.m{background:linear-gradient(180deg,#ff8ae6,#e23fc0);color:#2b0322;border:0;box-shadow:0 14px 40px -14px var(--mag)}
+
+/* 상단 */
+nav{position:sticky;top:0;z-index:20;backdrop-filter:blur(10px);background:rgba(5,7,15,.7);border-bottom:1px solid var(--edge)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{font-weight:900;letter-spacing:-.01em;display:flex;align-items:center;gap:10px}
+.logo i{width:18px;height:18px;background:linear-gradient(160deg,#9af4ff,var(--core));clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);box-shadow:0 0 14px var(--core)}
+.logo b{font-family:var(--fd);font-size:11px;letter-spacing:.3em;color:var(--mag);margin-left:2px}
+nav .links{display:flex;gap:6px;align-items:center}
+nav .links a{padding:8px 14px;border-radius:10px;color:var(--mute);font-weight:700;font-size:14px}
+nav .links a:hover{color:var(--ice);background:rgba(255,255,255,.06)}
+nav .links a.go{background:var(--core);color:#03202b}
+@media(max-width:700px){nav .links a:not(.go){display:none}}
+
+/* 히어로 */
+.hero{padding:56px 0 40px;text-align:center;position:relative}
+.hero h1{font-size:clamp(34px,6.6vw,76px);font-weight:900;letter-spacing:-.02em;margin:14px 0 0}
+.hero .sub{margin:18px auto 0;max-width:46ch;color:var(--mute);font-size:clamp(16px,2.2vw,20px)}
+.hero .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:28px}
+.player{position:relative;margin:44px auto 0;width:min(1000px,100%);border-radius:22px;overflow:hidden;border:1px solid rgba(47,224,255,.4);
+ box-shadow:0 0 0 1px rgba(255,79,216,.18),0 40px 100px -30px rgba(47,224,255,.35),0 0 120px -40px rgba(255,79,216,.4);background:#000}
+.player video{display:block;width:100%;aspect-ratio:16/9;background:#000}
+.player .tag{position:absolute;left:14px;top:14px;font-family:var(--fd);font-size:11px;letter-spacing:.22em;background:rgba(5,7,15,.75);padding:6px 12px;border-radius:99px;border:1px solid var(--edge);color:var(--core)}
+.player .snd{position:absolute;right:14px;bottom:14px;padding:10px 16px;border-radius:12px;border:1px solid var(--edge2,rgba(120,170,255,.35));background:rgba(5,7,15,.78);color:var(--ice);
+ font-weight:800;font-size:14px;cursor:pointer;font-family:inherit}
+.player .snd:hover{background:rgba(47,224,255,.2)}
+
+/* 숫자 */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:48px}
+.stat{padding:22px 16px;border-radius:18px;background:var(--panel);border:1px solid var(--edge);text-align:center}
+.stat b{display:block;font-family:var(--fd);font-size:clamp(30px,4vw,44px);font-weight:900;line-height:1.1}
+.stat span{display:block;color:var(--mute);font-size:14px;margin-top:6px}
+@media(max-width:760px){.stats{grid-template-columns:repeat(2,1fr)}}
+
+/* 비교 */
+.vs-head{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:38px}
+.vs-head div{padding:16px 20px;border-radius:16px;font-weight:900;font-size:18px;display:flex;align-items:center;gap:10px}
+.vs-head .old{background:rgba(255,255,255,.04);border:1px solid var(--edge);color:var(--mute)}
+.vs-head .new{background:linear-gradient(135deg,rgba(47,224,255,.18),rgba(255,79,216,.18));border:1px solid rgba(47,224,255,.55);box-shadow:0 0 40px -16px var(--core)}
+.vs-head small{font-weight:600;font-size:12.5px;opacity:.75}
+.vs{display:grid;gap:12px;margin-top:14px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:16px;opacity:0;transform:translateY(24px);transition:opacity .6s,transform .6s}
+.row.in{opacity:1;transform:none}
+.cell{padding:20px 22px;border-radius:16px;position:relative}
+.cell .lab{font-size:12.5px;font-weight:800;letter-spacing:.04em;margin-bottom:6px}
+.cell p{margin:0}
+.cell.old{background:rgba(255,255,255,.03);border:1px solid var(--edge);color:var(--mute)}
+.cell.old .lab{color:var(--dim)}
+.cell.new{background:linear-gradient(160deg,rgba(47,224,255,.12),rgba(255,79,216,.1));border:1px solid rgba(47,224,255,.4)}
+.cell.new .lab{color:var(--core)}
+.cell.new p{color:#f3f9ff;font-weight:600}
+.cell.new::before{content:"▶";position:absolute;left:-17px;top:50%;transform:translateY(-50%);color:var(--core);font-size:13px;text-shadow:0 0 10px var(--core)}
+.cell .up{display:inline-block;margin-top:9px;font-size:12.5px;font-weight:800;color:var(--good);background:rgba(94,242,164,.1);border:1px solid rgba(94,242,164,.35);padding:3px 10px;border-radius:99px}
+@media(max-width:760px){
+ .vs-head{display:none}
+ .row{grid-template-columns:1fr;gap:8px;margin-bottom:12px}
+ .cell.new::before{content:"▼";left:50%;top:-14px;transform:translateX(-50%)}
+}
+
+/* 막대 비교 */
+.bars{margin-top:44px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.bar{padding:22px;border-radius:18px;background:var(--panel);border:1px solid var(--edge)}
+.bar h3{font-size:17px;margin-bottom:14px}
+.bar .b{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:13px}
+.bar .b label{width:44px;color:var(--mute);flex:none}
+.bar .track{flex:1;height:26px;border-radius:8px;background:rgba(255,255,255,.05);overflow:hidden}
+.bar .fill{height:100%;width:0;border-radius:8px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-weight:800;font-size:12.5px;transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+.fill.o{background:#34405f;color:#c8d4ee}.fill.n{background:linear-gradient(90deg,#18b9e0,#ff4fd8);color:#05070f}
+.bar small{display:block;margin-top:12px;color:var(--dim);font-size:12.5px}
+@media(max-width:860px){.bars{grid-template-columns:1fr}}
+
+/* 장면 */
+.shots{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px}
+.shot{border-radius:18px;overflow:hidden;border:1px solid var(--edge);background:var(--panel);transition:transform .2s,border-color .2s}
+.shot:hover{transform:translateY(-4px);border-color:rgba(47,224,255,.5)}
+.shot img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+.shot div{padding:16px 18px 20px}
+.shot b{font-size:18px}
+.shot p{margin:6px 0 0;color:var(--mute);font-size:14.5px}
+@media(max-width:900px){.shots{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.shots{grid-template-columns:1fr}}
+
+/* 전작 존중 */
+.note{margin-top:34px;padding:22px 26px;border-radius:18px;border:1px dashed rgba(255,194,71,.5);background:rgba(255,194,71,.06);color:#ffe9b3;display:flex;gap:16px;align-items:center;flex-wrap:wrap;justify-content:space-between}
+.note p{margin:0;max-width:60ch}
+
+/* 마지막 */
+.final{text-align:center;padding:100px 0 70px}
+.final h2{font-size:clamp(30px,5.4vw,58px)}
+.final .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:30px}
+.final small{display:block;margin-top:26px;color:var(--dim)}
+footer{padding:30px 0 50px;text-align:center;color:var(--dim);font-size:13.5px;border-top:1px solid var(--edge)}
+footer a{color:var(--mute);text-decoration:underline;text-underline-offset:3px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01ms!important}.row{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+ <a href="#top" class="logo"><i></i>네온 코어 디펜스 <b>OVERLOAD</b></a>
+ <div class="links"><a href="#compare">전작과 비교</a><a href="#scenes">장면</a><a class="go" href="{{WEB}}">지금 플레이</a></div>
+</div></nav>
+
+<header class="hero" id="top"><div class="wrap">
+ <div class="kicker">NEON CORE DEFENSE · OVERLOAD</div>
+ <h1>전작보다, <span class="grad">모든 게 더 좋아졌다.</span></h1>
+ <p class="sub">5분 만에 한 판, 그런데 멈출 수 없다.<br>더 짧게, 더 깊게, 더 화려하게 돌아온 후속작.</p>
+ <div class="cta">
+  <a class="btn p" href="{{WEB}}">▶ 웹에서 바로 플레이</a>
+  <a class="btn m" href="{{APK}}">📱 안드로이드 앱 받기</a>
+ </div>
+
+ <div class="player">
+  <video id="v" src="data:video/mp4;base64,{{VIDEO}}" poster="data:image/jpeg;base64,{{POSTER}}" autoplay muted loop playsinline controls controlslist="nodownload"></video>
+  <div class="tag">15 SEC TRAILER</div>
+  <button class="snd" id="snd" type="button">🔊 소리 켜기</button>
+ </div>
+
+ <div class="stats">
+  <div class="stat"><b class="grad" data-n="10" data-pre="5~" data-suf="분">5~10분</b><span>한 판 길이</span></div>
+  <div class="stat"><b class="grad" data-n="40" data-suf="가지">40가지</b><span>방어탑 진화 모습</span></div>
+  <div class="stat"><b class="grad" data-n="3" data-suf="종">3종</b><span>화면을 채우는 거대 보스</span></div>
+  <div class="stat"><b class="grad" data-n="18" data-suf="스테이지">18스테이지</b><span>별 54개 캠페인</span></div>
+ </div>
+</div></header>
+
+<section id="compare"><div class="wrap">
+ <div class="kicker">BEFORE → AFTER</div>
+ <h2>전작과 비교하면, <span class="grad">이만큼 달라졌어요.</span></h2>
+ <p class="lead">양으로 승부했던 전작의 재미를 그대로 두고, 한 판의 밀도와 연출, "한 판만 더" 하게 만드는 구조를 새로 만들었어요.</p>
+
+ <div class="vs-head"><div class="old">전작 <small>네온 코어 디펜스</small></div><div class="new">후속작 <small>네온 코어 디펜스: 오버로드</small></div></div>
+
+ <div class="vs">
+  <div class="row"><div class="cell old"><div class="lab">한 판의 길이</div><p>30웨이브를 버티는 15분 이상의 긴 판</p></div>
+   <div class="cell new"><div class="lab">한 판의 길이</div><p>5~10분. 쉬는 시간에 한 판 하고 바로 다음 판으로</p><span class="up">절반 이하로 짧아졌어요</span></div></div>
+
+  <div class="row"><div class="cell old"><div class="lab">방어탑 성장</div><p>LV1에서 LV4까지, 한 길로 강화</p></div>
+   <div class="cell new"><div class="lab">방어탑 성장</div><p>LV3 다음에 A·B 갈래로 진화. 같은 탑이 전혀 다른 능력으로 변해요 (40가지 모습)</p><span class="up">선택이 전략이 된다</span></div></div>
+
+  <div class="row"><div class="cell old"><div class="lab">방어탑 구성</div><p>52종을 자유롭게 지을 수 있어서 비슷한 탑이 많아요</p></div>
+   <div class="cell new"><div class="lab">방어탑 구성</div><p>역할이 뚜렷한 20종. 판마다 6종만 골라 가서 "이번엔 어떤 조합?"을 고민해요</p><span class="up">고르는 재미 ↑</span></div></div>
+
+  <div class="row"><div class="cell old"><div class="lab">보스</div><p>체력이 많고 가끔 능력을 쓰는 큰 적</p></div>
+   <div class="cell new"><div class="lab">보스</div><p>화면의 4분의 1을 채우는 거대 보스 3종. 3단계 패턴, 약점 공략, 1초 이상 미리 보이는 위험 공격, 등장 연출과 처치 슬로모션</p><span class="up">극적인 순간 ↑</span></div></div>
+
+  <div class="row"><div class="cell old"><div class="lab">진행과 목표</div><p>웨이브를 오래 버티며 점수에 도전</p></div>
+   <div class="cell new"><div class="lab">진행과 목표</div><p>3챕터 18스테이지 캠페인. 별 3개 도전 조건, 깰 때마다 새 방어탑 해금, 엔딩과 하드 모드까지</p><span class="up">계속 하고 싶어지는 구조</span></div></div>
+
+  <div class="row"><div class="cell old"><div class="lab">위기 대처</div><p>탑을 더 짓고 강화하는 것 말고는 방법이 적어요</p></div>
+   <div class="cell new"><div class="lab">위기 대처</div><p>사령관 스킬 5종. 궤도 폭격, 시간 동결, 오버클럭… 위기의 순간을 내 손으로 뒤집어요</p><span class="up">짜릿한 역전</span></div></div>
+
+  <div class="row"><div class="cell old"><div class="lab">맵</div><p>길 모양만 달라요</p></div>
+   <div class="cell new"><div class="lab">맵</div><p>지형 효과 6종. 에너지 칸, 가속 패드, 전자기장, 냉각수, 정전, 움직이는 에너지 칸</p><span class="up">맵마다 다른 공략</span></div></div>
+
+  <div class="row"><div class="cell old"><div class="lab">증강 (아수라장)</div><p>1250종. 대부분 피해나 연사를 올리는 증강</p></div>
+   <div class="cell new"><div class="lab">증강 (아수라장)</div><p>120종. 전부 게임 규칙을 바꾸고, 강한 증강에는 대가가 붙어요</p><span class="up">고민되는 선택</span></div></div>
+
+  <div class="row"><div class="cell old"><div class="lab">조작</div><p>마우스 클릭과 단축키 중심</p></div>
+   <div class="cell new"><div class="lab">조작</div><p>터치와 마우스가 똑같이 편해요. 탑을 끌어다 놓고, 폰 가로 화면은 전용 배치로 맵을 크게</p><span class="up">태블릿·폰에 딱</span></div></div>
+
+  <div class="row"><div class="cell old"><div class="lab">연출과 소리</div><p>화려한 빛 효과와 효과음 중심의 전투</p></div>
+   <div class="cell new"><div class="lab">연출과 소리</div><p>진화 빛기둥, 보스 슬로모션, 증강 카드 뒤집기. 미리 그려 둔 빛 번짐으로 가볍게, 챕터마다 다른 음악</p><span class="up">보는 맛이 달라졌어요</span></div></div>
+
+  <div class="row"><div class="cell old"><div class="lab">자랑하기</div><p>결과를 글로 복사</p></div>
+   <div class="cell new"><div class="lab">자랑하기</div><p>멋진 결과 카드를 그림으로 저장해 친구에게 보내요. 내 기록과 방어탑 도감도 있어요</p><span class="up">보내고 싶은 결과 화면</span></div></div>
+ </div>
+
+ <div class="bars">
+  <div class="bar"><h3>⏱ 한 판 길이</h3>
+   <div class="b"><label>전작</label><div class="track"><div class="fill o" data-w="100">15분+</div></div></div>
+   <div class="b"><label>후속</label><div class="track"><div class="fill n" data-w="50">5~10분</div></div></div>
+   <small>막대는 대략적인 비교예요.</small></div>
+  <div class="bar"><h3>🌀 방어탑이 바뀌는 모습</h3>
+   <div class="b"><label>전작</label><div class="track"><div class="fill o" data-w="45">LV 4단계</div></div></div>
+   <div class="b"><label>후속</label><div class="track"><div class="fill n" data-w="100">진화 40가지</div></div></div>
+   <small>탑 하나가 갈 수 있는 길이 훨씬 많아졌어요.</small></div>
+  <div class="bar"><h3>👾 보스 존재감</h3>
+   <div class="b"><label>전작</label><div class="track"><div class="fill o" data-w="30">일반 크기</div></div></div>
+   <div class="b"><label>후속</label><div class="track"><div class="fill n" data-w="100">화면 ¼ 크기</div></div></div>
+   <small>3단계 패턴과 약점까지 더해졌어요.</small></div>
+ </div>
+
+ <div class="note">
+  <p><b>전작도 여전히 즐길 수 있어요.</b> 온라인 협동전과 1대1 친선전은 전작에서 계속 할 수 있고, 후속작은 혼자서 깊게 파고드는 재미에 집중했어요.</p>
+  <a class="btn" href="{{OLD}}">전작 하러 가기</a>
+ </div>
+</div></section>
+
+<section id="scenes" style="padding-top:20px"><div class="wrap">
+ <div class="kicker">SCENES</div>
+ <h2>영상 속 <span class="grad">그 장면들</span></h2>
+ <div class="shots">
+  <div class="shot"><img alt="적이 몰려오는 전투 화면" src="data:image/jpeg;base64,{{S1}}"><div><b>북적이는 전투</b><p>사격·폭발·원소·제어·지원, 역할이 다른 탑 20종이 길목을 지켜요.</p></div></div>
+  <div class="shot"><img alt="방어탑 갈래 진화 화면" src="data:image/jpeg;base64,{{S2}}"><div><b>갈래 진화 A / B</b><p>레일로 꿰뚫을까, 쏠수록 빨라지게 할까? 한 번 고르면 끝까지 가요.</p></div></div>
+  <div class="shot"><img alt="거대 보스 등장 경고 화면" src="data:image/jpeg;base64,{{S3}}"><div><b>거대 보스 등장</b><p>경고와 함께 카메라가 다가가고, 이름이 쾅! 약점을 노려 쓰러뜨려요.</p></div></div>
+  <div class="shot"><img alt="보스 처치 화면" src="data:image/jpeg;base64,{{S4}}"><div><b>처치의 순간</b><p>슬로모션과 대폭발, 별과 함께 새 방어탑이 해금돼요.</p></div></div>
+  <div class="shot"><img alt="증강 선택 카드 화면" src="data:image/jpeg;base64,{{S5}}"><div><b>증강 120종</b><p>일반, 희귀, 전설. 규칙을 바꾸는 선택이 아수라장을 달라지게 해요.</p></div></div>
+  <div class="shot"><img alt="타이틀 화면" src="data:image/jpeg;base64,{{S6}}"><div><b>5분 만에 한 판</b><p>그런데 멈출 수 없다. 지금 바로 해 보세요.</p></div></div>
+ </div>
+</div></section>
+
+<section class="final"><div class="wrap">
+ <div class="kicker">PLAY NOW</div>
+ <h2>더 짧게, 더 깊게, <span class="grad">더 화려하게.</span></h2>
+ <div class="cta">
+  <a class="btn p" href="{{WEB}}">▶ 웹에서 바로 플레이</a>
+  <a class="btn m" href="{{APK}}">📱 안드로이드 앱 받기</a>
+ </div>
+ <small>웹은 설치 없이 바로, 앱은 인터넷이 없어도 돼요. 기록은 이 기기에만 저장돼요.</small>
+</div></section>
+
+<footer><div class="wrap">네온 코어 디펜스: 오버로드 · <a href="{{REPO}}">GitHub</a> · <a href="{{OLD}}">전작 네온 코어 디펜스</a></div></footer>
+
+<script>
+(function(){
+ var v=document.getElementById('v'), b=document.getElementById('snd');
+ function sync(){ b.textContent=v.muted?'🔊 소리 켜기':'🔇 소리 끄기'; }
+ b.addEventListener('click',function(){ v.muted=!v.muted; if(!v.muted){ v.volume=1; v.play&&v.play().catch(function(){}); } sync(); });
+ v.addEventListener('volumechange',sync); sync();
+ /* 화면에 들어올 때 나타나기 */
+ var io=('IntersectionObserver' in window)?new IntersectionObserver(function(es){
+  es.forEach(function(e){ if(!e.isIntersecting) return; var t=e.target; t.classList.add('in');
+   t.querySelectorAll('.fill').forEach(function(f){ f.style.width=f.dataset.w+'%'; });
+   if(t.classList.contains('bar')) t.querySelectorAll('.fill').forEach(function(f){ f.style.width=f.dataset.w+'%'; });
+   io.unobserve(t); });
+ },{threshold:.2}):null;
+ var items=document.querySelectorAll('.row,.bar');
+ items.forEach(function(el,i){ if(io) io.observe(el); else { el.classList.add('in'); el.querySelectorAll('.fill').forEach(function(f){ f.style.width=f.dataset.w+'%'; }); } });
+ /* 숫자 올라가기 */
+ document.querySelectorAll('.stat b').forEach(function(el){
+  var n=+el.dataset.n, pre=el.dataset.pre||'', suf=el.dataset.suf||'', done=false;
+  function run(){ if(done) return; done=true; var t0=performance.now();
+   (function f(t){ var k=Math.min(1,(t-t0)/1100), e=1-Math.pow(1-k,3); el.textContent=pre+Math.round(n*e)+suf; if(k<1) requestAnimationFrame(f); })(t0); }
+  if(io){ new IntersectionObserver(function(es,o){ if(es[0].isIntersecting){ run(); o.disconnect(); } },{threshold:.6}).observe(el); }
+ });
+})();
+</script>
+</body>
+</html>

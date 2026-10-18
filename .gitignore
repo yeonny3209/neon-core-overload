@@ -3,3 +3,5 @@ __pycache__/
 *.pyc
 promo/ad.html
 promo/out/
+promo/page/ad-web.mp4
+promo/page/*.jpg
