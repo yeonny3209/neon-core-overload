@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="네온 코어 디펜스: 오버로드 — 5분 만에 한 판, 그런데 멈출 수 없다.">
+<meta name="theme-color" content="#05070f">
+<title>네온 코어 디펜스: 오버로드</title>
+<style>
+@font-face{font-family:'Orbitron';font-weight:400 900;font-display:block;src:url(data:font/woff2;base64,/*FONT*/) format('woff2')}
+/*STYLE*/
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- 타이틀 -->
+  <section id="s-title" class="screen">
+    <canvas id="title-bg" aria-hidden="true"></canvas>
+    <div class="t-wrap">
+      <div class="t-kicker">NEON CORE DEFENSE</div>
+      <h1 class="t-name">네온 코어 디펜스</h1>
+      <div class="t-sub">O V E R L O A D</div>
+      <p class="t-line">5분 만에 한 판, 그런데 멈출 수 없다.</p>
+      <div class="t-btns">
+        <button class="btn big" id="t-campaign">캠페인</button>
+        <button class="btn big alt" id="t-chaos">아수라장</button>
+      </div>
+      <div class="t-small">
+        <button class="btn ghost" id="t-records">내 기록</button>
+        <button class="btn ghost" id="t-codex">방어탑 도감</button>
+        <button class="btn ghost" id="t-settings">설정</button>
+      </div>
+    </div>
+    <div class="t-foot">방어탑 20종 · 갈래 진화 40가지 · 거대 보스 3종 · 증강 120종</div>
+  </section>
+
+  <!-- 챕터 지도 -->
+  <section id="s-map" class="screen hide">
+    <header class="bar">
+      <button class="btn ghost" id="m-back">← 타이틀</button>
+      <div class="bar-title" id="m-title">챕터 1 · 네온 시가지</div>
+      <div class="bar-right"><span class="stars-total" id="m-stars">★ 0 / 54</span></div>
+    </header>
+    <div class="ch-tabs" id="m-tabs"></div>
+    <div class="map-wrap"><div class="map-board" id="m-board"></div></div>
+    <div class="map-info" id="m-info"></div>
+  </section>
+
+  <!-- 준비 -->
+  <section id="s-prep" class="screen hide">
+    <header class="bar">
+      <button class="btn ghost" id="p-back">← 지도</button>
+      <div class="bar-title" id="p-title">1-1 첫 불빛</div>
+      <div class="bar-right"></div>
+    </header>
+    <div class="prep-body">
+      <div class="prep-col">
+        <h3>데려갈 방어탑 <small id="p-count">0 / 6</small></h3>
+        <div class="prep-towers" id="p-towers"></div>
+        <h3>사령관 스킬 <small id="p-scount">0 / 2</small></h3>
+        <div class="prep-skills" id="p-skills"></div>
+      </div>
+      <div class="prep-col side">
+        <h3>정찰 보고</h3>
+        <div id="p-intel"></div>
+        <div class="prep-go"><button class="btn big" id="p-go">출격</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 전투 -->
+  <section id="s-battle" class="screen hide">
+    <header class="hud" id="hud">
+      <div class="hud-l">
+        <div class="ro"><span class="k">WAVE</span><span class="v" id="h-wave">0/10</span></div>
+        <div class="ro gold"><span class="k">에너지</span><span class="v" id="h-gold">0</span></div>
+        <div class="ro life"><span class="k">코어</span><span class="v" id="h-life">20</span></div>
+        <div class="ro shield hide" id="h-shield-box"><span class="k">보호막</span><span class="v" id="h-shield">0</span></div>
+      </div>
+      <div class="hud-c" id="h-stage">1-1 첫 불빛</div>
+      <div class="hud-r">
+        <div class="seg"><button class="btn sm on" data-speed="1">1×</button><button class="btn sm" data-speed="2">2×</button><button class="btn sm" data-speed="3">3×</button></div>
+        <button class="btn sm" id="h-pause">❚❚</button>
+        <button class="btn sm" id="h-menu">메뉴</button>
+      </div>
+    </header>
+    <div class="stage" id="stage">
+      <canvas id="game" width="1280" height="720"></canvas>
+      <div id="banner"><div class="b-txt"></div><div class="b-sub"></div></div>
+      <div id="tip" class="hide"></div>
+      <div id="pop" class="hide"></div>
+      <div id="bossname" class="hide"></div>
+      <button class="btn sm" id="skip-cine" hidden>건너뛰기 ▶</button>
+    </div>
+    <footer class="dock" id="dock">
+      <button class="dock-fold" id="d-fold" title="상점 접기">▾</button>
+      <div class="shop" id="shop"></div>
+      <div class="skills" id="skills"></div>
+      <div class="callbox">
+        <button class="btn call" id="d-call"><span>웨이브 호출</span><small id="d-callsub">Space</small></button>
+        <button class="btn sm on" id="d-auto" title="웨이브 자동 시작">자동</button>
+      </div>
+    </footer>
+  </section>
+
+  <!-- 모달 -->
+  <div id="modal" class="hide"><div class="sheet" id="sheet"></div></div>
+  <div id="coach" class="hide"></div>
+  <div id="toast"></div>
+  <div id="flash"></div>
+</div>
+<script>
+/*SCRIPT*/
+</script>
+</body>
+</html>
