@@ -521,11 +521,22 @@ function makeCard(r){
  g.fillStyle='rgba(255,255,255,.55)'; g.font='600 20px sans-serif'; g.textAlign='right'; g.fillText('너도 한번 해볼래?',1130,580);
  return c;
 }
+/* Artifact 안에서는 다운로드 권한(downloads)으로, 그 밖에서는 일반 다운로드로 저장한다 */
+async function saveCard(c){
+ const name='neon-overload-result.png';
+ const dl=window.claude&&window.claude.use?await window.claude.use('downloads').catch(()=>null):null;
+ if(dl){
+  c.toBlob(b=>{ dl.save({filename:name,data:b}).then(()=>toast('저장했어요','good'),e=>{ if(e&&e.code!=='declined') toast('저장하지 못했어요. 그림을 길게 눌러 저장해 보세요','bad'); }); },'image/png');
+  return;
+ }
+ const a=document.createElement('a'); a.download=name; a.href=c.toDataURL('image/png'); document.body.appendChild(a); a.click(); a.remove();
+}
 function showCard(r){
  const c=makeCard(r), url=c.toDataURL('image/png');
  const s=openModal('<div class="kicker">RESULT CARD</div><h2>결과 카드</h2><p class="lead">길게 누르거나 저장 버튼으로 그림을 저장해서 친구에게 보내 보세요.</p>'+
   '<img src="'+url+'" style="width:100%;border-radius:12px;border:1px solid var(--edge2)" alt="결과 카드">'+
-  '<div class="row"><a class="btn big" download="neon-overload-result.png" href="'+url+'">카드 저장</a><button class="btn" id="cd-copy">글로 복사</button><button class="btn ghost" id="cd-back">돌아가기</button></div>');
+  '<div class="row"><button class="btn big" id="cd-save">카드 저장</button><button class="btn" id="cd-copy">글로 복사</button><button class="btn ghost" id="cd-back">돌아가기</button></div>');
+ $('#cd-save').onclick=()=>saveCard(c);
  $('#cd-copy').onclick=()=>{
   const txt='네온 코어 디펜스: 오버로드 · '+(G.mode==='chaos'?'아수라장 웨이브 '+G.wave:G.st.id+' '+G.st.n+' '+(r.win?'★'.repeat(r.stars):'패배'))+' · '+fmt(G.stats.score)+'점\n너도 한번 해볼래?';
   if(navigator.clipboard) navigator.clipboard.writeText(txt).then(()=>toast('복사했어요','good'),()=>toast('복사하지 못했어요','bad'));
