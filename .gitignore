@@ -1,3 +1,5 @@
 dist/
 __pycache__/
 *.pyc
+promo/ad.html
+promo/out/
