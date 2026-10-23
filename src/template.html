@@ -78,13 +78,14 @@
         <div class="ro life"><span class="k">코어</span><span class="v" id="h-life">20</span></div>
         <div class="ro shield hide" id="h-shield-box"><span class="k">보호막</span><span class="v" id="h-shield">0</span></div>
       </div>
-      <div class="hud-c" id="h-stage">1-1 첫 불빛</div>
+      <div class="hud-c"><div id="h-stage">1-1 첫 불빛</div><div id="h-next"></div></div>
       <div class="hud-r">
         <div class="seg"><button class="btn sm on" data-speed="1">1×</button><button class="btn sm" data-speed="2">2×</button><button class="btn sm" data-speed="3">3×</button></div>
         <button class="btn sm" id="h-pause">❚❚</button>
         <button class="btn sm" id="h-menu">메뉴</button>
       </div>
     </header>
+    <div id="wavebar"><i></i></div>
     <div class="stage" id="stage">
       <canvas id="game" width="1280" height="720"></canvas>
       <div id="banner"><div class="b-txt"></div><div class="b-sub"></div></div>

@@ -105,6 +105,7 @@ const CH_HP=[1,1.85,3.1], CH_GOLD=[1,1.5,2.05], CH_START=[260,450,680];
 function waveHpMul(st,w){ return CH_HP[st.ch]*(1+.05*(st.idx%6))*(1+.1*(w-1)+.006*(w-1)*(w-1)); }
 /* 적마다 위협도(비용)를 매기고, 웨이브마다 정해진 예산 안에서
    싼 적(물량)과 특수 적(소수)을 섞는다 — 특수 적이 한꺼번에 몰리는 일이 없다. */
+const DENS=1.35;   /* 한 웨이브의 적 수 배율. 적 하나의 체력·보상은 1/DENS 라서 총량은 같다 */
 const THREAT={drone:1,swift:.8,brute:3,flyer:1.5,splitter:2.2,healer:3.5,shield:2.2,phase:2,blinker:1.6,sapper:3.5,stealth:2,bearer:3,berserk:2.5,carrier:5,shard:.5};
 function buildWaves(st){
  const P=st.pool, N=st.waves, out=[];
@@ -128,6 +129,7 @@ function buildWaves(st){
   if(w===N&&!st.boss) g.push([fod[0],Math.round(B*.35/THREAT[fod[0]]),.4,8]);
   out.push(g);
  }
+ for(const wv of out) for(const g of wv){ g[1]=Math.max(1,Math.round(g[1]*DENS)); g[2]=g[2]*.82; }
  if(st.boss){
   const B=(9+N*3.2)*(1+.12*st.ch);
   const g=[[st.boss,1,1,3],[fod[0],Math.round(B*.4/THREAT[fod[0]]),.7,0]];
@@ -141,7 +143,7 @@ function buildWaves(st){
 const CHAOS_POOL=['drone','swift','brute','flyer','splitter','healer','shield','phase','blinker','sapper','stealth','bearer','berserk','carrier'];
 function chaosWave(n){
  const out=[], avail=CHAOS_POOL.slice(0,Math.min(CHAOS_POOL.length,3+Math.floor(n/2)));
- const cnt=Math.round(7+n*1.1);
+ const cnt=Math.round((7+n*1.1)*DENS);
  out.push([avail[(n*3)%avail.length],cnt,Math.max(.22,.8-n*.012),0]);
  out.push([avail[(n*5+1)%avail.length],Math.round(cnt*.5),.8,3]);
  if(n>=5) out.push([avail[(n*7+2)%avail.length],Math.round(cnt*.35),.9,6]);

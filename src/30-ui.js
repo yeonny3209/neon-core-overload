@@ -19,7 +19,8 @@ let titleRAF=0;
 function startTitleBG(){
  const c=$('#title-bg'), g=c.getContext('2d');
  cancelAnimationFrame(titleRAF);
- const rng=mulberry32(7), blds=[];
+ const rng=mulberry32(7), blds=[], motes=[];
+ for(let i=0;i<46;i++) motes.push({x:rng(),y:rng(),v:.02+rng()*.05,s:rng(),c:rng()<.5?'#2fe0ff':'#ff4fd8'});
  for(let i=0;i<60;i++) blds.push({x:rng(),w:.02+rng()*.05,h:.08+rng()*.26,c:rng()<.5?'#2fe0ff':'#ff4fd8',l:rng()});
  const draw=()=>{
   if(G.scene!=='title') return;
@@ -47,6 +48,12 @@ function startTitleBG(){
   }
   const hg=g.createLinearGradient(0,h*.7,0,h); hg.addColorStop(0,'rgba(47,224,255,0)'); hg.addColorStop(1,'rgba(47,224,255,.12)');
   g.fillStyle=hg; g.fillRect(0,h*.7,w,h*.3);
+  for(const m of motes){
+   m.y-=m.v*.016; if(m.y<-.02){ m.y=1.02; m.x=Math.random(); }
+   const a=.25+.5*Math.abs(Math.sin(T*.8+m.s*9));
+   g.globalAlpha=a*(.3+.7*(1-m.y)); g.fillStyle=m.c; const sz=1.5+m.s*2.5; g.fillRect(m.x*w+Math.sin(T+m.s*7)*8,m.y*h,sz,sz);
+  }
+  g.globalAlpha=1;
   titleRAF=requestAnimationFrame(draw);
  };
  draw();
@@ -238,6 +245,8 @@ function buildShop(){
   el.className='scard2'; el.dataset.t=id;
   el.innerHTML='<span class="hk">'+(i+1)+'</span><canvas></canvas><div class="n">'+D.n+'</div><div class="c">'+buildCost(id)+'</div>';
   towerIcon(el.querySelector('canvas'),id);
+  el.addEventListener('pointerenter',()=>{ if(!G.buy&&!G.aimSkill&&G.aimSkill!==0) tip(D.n+' · '+ROLES[D.role].n+' — '+D.desc); });
+  el.addEventListener('pointerleave',()=>{ if(!G.buy) tip(''); });
   box.appendChild(el);
   bindShopCard(el,id);
  });
@@ -294,6 +303,29 @@ function syncHUD(force){
  $('#d-auto').classList.toggle('on',G.auto);
  syncShop(); syncSkills();
  if(G.sel) syncPop();
+ /* 웨이브 진행 막대: 교전 중엔 남은 적, 준비 중엔 남은 시간 */
+ const wb=$('#wavebar'), wi=wb.firstChild; let pr;
+ if(G.over) pr=0;
+ else if(G.waveOn){ const tot=Math.max(1,G.stats.waveTotal||1); pr=clamp(1-(G.queue.length+G.enemies.length)/tot,0,1); }
+ else pr=G.prepMax>0?clamp(G.prep/G.prepMax,0,1):0;
+ wb.classList.toggle('war',G.waveOn);
+ wi.style.width=(pr*100).toFixed(1)+'%';
+ /* 다음 웨이브에 올 적 */
+ const nk=G.wave+'|'+G.mode+'|'+G.waveOn;
+ if(force||hudCache.np!==nk){ hudCache.np=nk; renderNext(); }
+}
+const _eiu={};
+function enemyIconURL(type){
+ if(_eiu[type]) return _eiu[type];
+ const c=document.createElement('canvas'); enemyIcon(c,type); return (_eiu[type]=c.toDataURL('image/png'));
+}
+function renderNext(){
+ const el=$('#h-next'); const n=G.wave+1; let def=null;
+ if(G.mode==='chaos') def=chaosWave(n); else if(n<=G.totalWaves) def=G.waves[n-1];
+ if(!def||G.over){ el.innerHTML=''; return; }
+ const agg={}, order=[];
+ for(const g of def){ if(agg[g[0]]===undefined){ agg[g[0]]=0; order.push(g[0]); } agg[g[0]]+=g[1]; }
+ el.innerHTML='<span style="opacity:.7">다음</span>'+order.slice(0,6).map(t=>'<span class="np'+(ENEMIES[t].giant?' boss':'')+'" title="'+esc(ENEMIES[t].n)+'"><img alt="" src="'+enemyIconURL(t)+'">'+(ENEMIES[t].giant?'':'×'+agg[t])+'</span>').join('');
 }
 function setSpeed(n){ G.speed=n; $$('#hud [data-speed]').forEach(b=>b.classList.toggle('on',+b.dataset.speed===n)); }
 function togglePause(force){

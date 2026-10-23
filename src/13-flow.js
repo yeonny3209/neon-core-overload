@@ -1,7 +1,7 @@
 /* ═══════════ 판 시작 ═══════════ */
 function resetBattle(){
  Object.assign(G,{wave:0,waveOn:false,queue:[],waveT:0,prep:0,prepMax:0,cShield:0,
-  towers:[],ghosts:[],enemies:[],shots:[],fx:[],parts:[],texts:[],pools:[],mines:[],vortex:[],echoQ:[],tele:[],orbitals:[],
+  towers:[],ghosts:[],enemies:[],shots:[],fx:[],parts:[],texts:[],pools:[],mines:[],vortex:[],echoQ:[],tele:[],orbitals:[],punch:null,
   time:0,frame:0,paused:false,over:false,sel:null,buy:null,hover:null,aimSkill:null,
   aug:{},augList:[],augPending:false,overclockT:0,freezeT:0,freezeBoss:0,firstStrikeT:0,killRate:0,killRateT:0,
   bosses:[],bossPending:null,cine:null,slowmo:0,shake:0,cam:{x:W/2,y:H/2,z:1},blackout:-1,buffsDirty:true,
@@ -103,6 +103,7 @@ function callWave(){
 }
 function endWave(early){
  G.waveOn=false;
+ G.punchSkipBanner=false;
  const A=G.aug, chG=G.mode==='chaos'?1+G.wave*.02:CH_GOLD[G.st.ch];
  let bonus=Math.round((40+G.wave*8)*chG);
  let mined=0, interest=0, repair=0;
@@ -120,6 +121,7 @@ function endWave(early){
  G.gold+=bonus;
  const c=G.paths[0].core;
  say(c.x,c.y-50,'+'+bonus,'#ffc247',18);
+ if(!(G.mode==='chaos'&&G.wave%3===0)){ banner('방어 성공','+'+bonus+' 에너지',false); SND.play('clear'); }
  if(repair) healCore(repair);
  if(A.barrier_regen&&G.cShield>0) healCore(1);
  if(A.cooldown_reset) for(const s of G.skills) s.cd=0;

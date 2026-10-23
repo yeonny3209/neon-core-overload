@@ -196,6 +196,7 @@ const SND={
    case 'wave': this.tone({f:220,f2:440,type:'sawtooth',d:.45,g:.07,lp:1200,lp2:3000,verb:1}); break;
    case 'star': this.chord([1047,1319,1568],{type:'triangle',d:.35,g:.07,stag:.04,verb:1}); break;
    case 'unlock': this.chord([523,784,1047,1568],{type:'triangle',d:.9,g:.07,stag:.09,verb:1}); break;
+   case 'clear': this.chord([659,784,988],{type:'triangle',d:.45,g:.06,stag:.06,verb:1}); break;
    case 'win': this.chord([523,659,784,1047],{type:'triangle',d:1.1,g:.09,stag:.12,verb:1}); this.chord([262,330,392],{type:'sine',d:1.4,g:.06,at:.45,verb:1}); break;
    case 'lose': this.chord([392,330,262,196],{type:'sawtooth',d:1,g:.09,stag:.2,lp:1100,verb:1}); this.tone({f:49,type:'sine',d:1.8,g:.13}); break;
    case 'augshow': this.hiss({f:600,f2:6000,d:.5,g:.05,type:'bandpass',q:2,verb:1}); this.chord([440,554,659],{type:'sine',d:.5,g:.04,stag:.08,verb:1}); break;

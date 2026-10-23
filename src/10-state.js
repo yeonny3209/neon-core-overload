@@ -295,6 +295,9 @@ function evolveFx(t){
  G.fx.push({k:'evo',x:t.x,y:t.y,col:evoCol(t),life:1.2,max:1.2});
  burst(t.x,t.y,evoCol(t),40,2.2);
  G.shake=Math.max(G.shake,4);
+ G.punch={t:0,dur:.85,x:t.x,y:t.y};
+ G.slowmo=Math.max(G.slowmo,.35);
+ banner('진화 완료',towerName(t),false);
 }
 function sellTower(t){
  if(!t||t.ghost) return;

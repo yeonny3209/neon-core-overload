@@ -67,6 +67,49 @@ function buildBG(){
  BG=c;
 }
 
+/* ── 배경에 떠도는 입자: 챕터마다 비 · 물방울 · 별빛 ── */
+let AMB=null, AMBkey='', rLast=0;
+function ambInit(){
+ const rng=mulberry32(G.st.ch*31+7), n=G.lowfx?30:64; AMB=[];
+ for(let i=0;i<n;i++) AMB.push({x:rng()*W,y:rng()*H,s:rng(),p:rng()*TAU,v:.45+rng()});
+ AMBkey=G.mapId+'|'+G.mode;
+}
+function drawAmbient(g,T,dt){
+ if(!AMB||AMBkey!==G.mapId+'|'+G.mode) ambInit();
+ const ch=G.st.ch;
+ g.save(); g.globalCompositeOperation='lighter';
+ for(let i=0;i<AMB.length;i++){
+  const a=AMB[i];
+  if(ch===0){
+   a.y+=a.v*640*dt; a.x-=a.v*95*dt;
+   if(a.y>H){ a.y=-24; a.x=Math.random()*(W+80); } if(a.x<-30) a.x+=W+60;
+   g.strokeStyle='rgba(150,205,255,'+(.1+.12*a.s)+')'; g.lineWidth=1;
+   g.beginPath(); g.moveTo(a.x,a.y); g.lineTo(a.x+6,a.y-20*a.v); g.stroke();
+  } else if(ch===1){
+   a.y-=a.v*28*dt; a.x+=Math.sin(T*1.2+a.p)*12*dt;
+   if(a.y<-12){ a.y=H+12; a.x=Math.random()*W; }
+   g.strokeStyle='rgba(120,205,255,'+(.14+.16*a.s)+')'; g.lineWidth=1;
+   g.beginPath(); g.arc(a.x,a.y,2+a.s*5,0,TAU); g.stroke();
+  } else {
+   a.x+=a.v*7*dt; if(a.x>W+5) a.x=-5;
+   const tw=.5+.5*Math.sin(T*(1+a.v)+a.p);
+   g.fillStyle='rgba(255,232,190,'+(.1+.5*tw*a.s)+')'; const sz=1.4+a.s*1.8; g.fillRect(a.x,a.y,sz,sz);
+  }
+ }
+ g.restore();
+}
+/* 회랑 위로 적이 가는 방향으로 빛이 흐른다 */
+function drawFlow(g,T){
+ g.save(); g.globalCompositeOperation='lighter'; g.lineCap='round'; g.lineJoin='round';
+ const acc=CHAPTERS[G.st.ch].acc;
+ for(const P of G.paths){
+  if(!P.p2d){ const p=new Path2D(); P.pts.forEach((q,i)=>i?p.lineTo(q.x,q.y):p.moveTo(q.x,q.y)); P.p2d=p; }
+  g.strokeStyle=hexA(acc,.5); g.lineWidth=3; g.setLineDash([2,26]); g.lineDashOffset=-T*70; g.stroke(P.p2d);
+  g.strokeStyle='rgba(255,255,255,.16)'; g.lineWidth=1.2; g.setLineDash([10,34]); g.lineDashOffset=-T*96; g.stroke(P.p2d);
+ }
+ g.setLineDash([]); g.restore();
+}
+
 function render(){
  if(!G.paths.length) return;
  if(!BG||BGkey!==G.mapId+'|'+G.mode) buildBG();
@@ -79,6 +122,8 @@ function render(){
  if(cam.z!==1||cam.x!==W/2||cam.y!==H/2){ g.translate(W/2,H/2); g.scale(cam.z,cam.z); g.translate(-cam.x,-cam.y); }
  if(G.shake>.05) g.translate(rnd(-G.shake,G.shake)*.6,rnd(-G.shake,G.shake)*.6);
  g.drawImage(BG,0,0);
+ { const rdt=Math.min(.05,Math.max(0,T-(rLast||T))); rLast=T; drawAmbient(g,T,rdt); }
+ drawFlow(g,T);
  drawTerrain(g,T);
  drawCore(g,T);
  drawPools(g,T);
@@ -202,11 +247,22 @@ function drawTowers(g,T){
   g.save(); g.translate(t.x,t.y);
   if(ghost){ g.globalAlpha=.4+.15*Math.sin(T*6); }
   if(t.flash>0){ g.save(); g.globalCompositeOperation='lighter'; glow(g,0,0,40+t.flash*20,evoCol(t),Math.min(1,t.flash)); g.restore(); }
+  /* 새로 지은 탑은 커지며 나타나고 번쩍인다 */
+  const bage=G.time-t.born;
+  if(bage>=0&&bage<.4){
+   const bk=Math.min(1,bage/.34), bs=.5+.5*easeOut(bk)+.14*Math.sin(bk*Math.PI);
+   g.scale(bs,bs);
+   g.save(); g.globalCompositeOperation='lighter'; glow(g,0,0,40,t.D.col,(1-bage/.4)*.85); g.restore();
+  }
   if(SAVE.d.cleared['3-4']&&t.evo&&SAVE.d.set.skin!==false){ g.save(); g.globalCompositeOperation='lighter'; glow(g,0,0,30,'#ffc247',.25+.1*Math.sin(T*2+t.x)); g.restore(); }
   let sp=t.spin;
   const w0=t.wep[0];
   if(w0&&w0.s.kind==='gatling') sp=t.spin*(.4+w0.spin*2.5);
   drawTowerArt(g,t.id,t.evo,t.evo2,t.lv,t.ang,t.recoil,sp,T);
+  if(t.muzzle>0&&!G.lowfx){
+   g.save(); g.globalCompositeOperation='lighter';
+   glow(g,Math.cos(t.ang)*16,Math.sin(t.ang)*16,10+14*t.muzzle,evoCol(t),.9*t.muzzle); g.restore();
+  }
   if(t.jam>G.time){
    g.globalAlpha=.6; g.fillStyle='rgba(5,8,16,.75)'; circ(g,0,0,19); g.fill();
    g.globalAlpha=.6+Math.sin(T*20)*.3; g.strokeStyle='#ffd34d'; g.lineWidth=2; g.setLineDash([4,4]); circ(g,0,0,21); g.stroke(); g.setLineDash([]);
@@ -272,6 +328,14 @@ function drawShots(g,T){
  g.save(); g.globalCompositeOperation='lighter';
  for(const p of G.shots){
   if(p.delay>0) continue;
+  if(p.tr&&p.tr.length>=4){
+   const a=p.tr; g.lineCap='round';
+   for(let i=2;i<a.length;i+=2){
+    const f=i/a.length;
+    g.strokeStyle=hexA(p.col||'#ffffff',f*.6); g.lineWidth=1+f*(p.k==='plasma'?5:2.6);
+    g.beginPath(); g.moveTo(a[i-2],a[i-1]); g.lineTo(a[i],a[i+1]); g.stroke();
+   }
+  }
   switch(p.k){
    case 'bullet': glow(g,p.x,p.y,p.small?7:10,p.col,.9); g.fillStyle='#fff'; circ(g,p.x,p.y,p.small?1.6:2.2); g.fill(); break;
    case 'dart': glow(g,p.x,p.y,10,p.col,.9); g.fillStyle=p.col; poly(g,p.x,p.y,4,3,T*20); g.fill(); break;

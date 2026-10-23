@@ -13,6 +13,12 @@ function loop(ts){
  }
  if(G.scene!=='battle') return;
  if(G.cine){ stepCine(dt); render(); return; }
+ /* 진화 연출: 탑으로 살짝 다가갔다가 돌아온다 */
+ if(G.punch){
+  const pc=G.punch; pc.t+=dt; const pk=pc.t/pc.dur;
+  if(pk>=1){ G.punch=null; G.cam={x:W/2,y:H/2,z:1}; }
+  else { const f=Math.sin(pk*Math.PI), z=1+.3*f; G.cam.z=z; G.cam.x=lerp(W/2,clamp(pc.x,W/2/z,W-W/2/z),f); G.cam.y=lerp(H/2,clamp(pc.y,H/2/z,H-H/2/z),f); }
+ }
  /* 보스 처치 슬로모션 */
  let sdt=dt;
  if(G.slowmo>0){ G.slowmo-=dt; sdt=dt*.25; }

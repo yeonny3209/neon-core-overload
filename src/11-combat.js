@@ -13,7 +13,7 @@ function say(x,y,s,col,size){
 }
 function addFx(o){ if(G.fx.length<(G.lowfx?140:320)) G.fx.push(o); }
 function ring(x,y,r,col,life,w){ addFx({k:'ring',x:x,y:y,r:r,col:col,life:life||.4,max:life||.4,w:w||2}); }
-function boom(x,y,r,col){ addFx({k:'boom',x:x,y:y,r:r,col:col,life:.42,max:.42}); }
+function boom(x,y,r,col){ addFx({k:'boom',x:x,y:y,r:r,col:col,life:.42,max:.42}); if(r>=70) G.shake=Math.max(G.shake,2.5); }
 function beamFx(x1,y1,x2,y2,col,life,w){ addFx({k:'beam',x1:x1,y1:y1,x2:x2,y2:y2,col:col,life:life||.18,max:life||.18,w:w||3}); }
 function boltFx(pts,col,life){ addFx({k:'bolt',pts:pts,col:col,life:life||.2,max:life||.2}); }
 
@@ -158,6 +158,7 @@ function kill(e,src,o){
  if(src) src.kills++;
  if(!e.D.minion||Math.random()<.3) say(e.x,e.y-e.r,'+'+g,'#ffc247',e.D.boss?18:11);
  burst(e.x,e.y,e.col,e.D.giant?60:10,e.D.giant?4:1.4);
+ if(!e.D.minion&&!e.D.giant) ring(e.x,e.y,e.r+4,e.col,.28,1.6);
  SND.play('die',45);
  const A=G.aug;
  if(e.D.split&&!A.splitter_none){
@@ -474,6 +475,7 @@ function updateTowers(dt){
  const list=G.ghosts.length?G.towers.concat(G.ghosts):G.towers;
  for(const t of list){
   if(t.recoil>0) t.recoil=Math.max(0,t.recoil-dt*6);
+  if(t.muzzle>0) t.muzzle=Math.max(0,t.muzzle-dt*12);
   if(t.flash>0) t.flash-=dt;
   t.spin+=dt;
   if(t.jam>G.time){ for(const w of t.wep){ w.beams=[]; w.on=false; } continue; }
@@ -486,6 +488,7 @@ function updateTowers(dt){
    w.cd-=dt;
    if(w.cd<=0){
     if(shoot(t,w)){
+     t.muzzle=1;
      const x=S(t,w);
      let rate=x.rate;
      if(k==='gatling') rate*=1+w.spin*(x.spin-1);
@@ -512,6 +515,7 @@ function updateShots(dt){
   }
   p.life-=dt;
   if(p.life<=0) continue;
+  if(!G.lowfx){ const tr=p.tr||(p.tr=[]); tr.push(p.x,p.y); if(tr.length>14) tr.splice(0,2); }
   if(p.k==='missile'){
    if(!p.tg||!p.tg.alive){ p.tg=nearestEnemy(p.x,p.y,260,null,true); }
    if(p.tg){
@@ -548,6 +552,7 @@ function projHit(p){
  if(p.k==='bullet'){
   const done=hurt(e,p.dmg,{src:p.src,kind:'hit',crit:x.crit,cmul:x.cmul,from:{x:p.src.x,y:p.src.y}});
   if(done) hitAugs(e,done,p.src);
+  burst(e.x,e.y,p.col,3,.6);
   p.hit.push(e);
   if(p.bounce>0){ p.bounce--; const n=nearestEnemy(e.x,e.y,120,p.hit); if(n){ p.tg=n; p.dmg*=.8; return true; } }
   if(p.pierce>0){ p.pierce--; const n=nearestEnemy(e.x,e.y,90,p.hit); if(n){ p.tg=n; return true; } }

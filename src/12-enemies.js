@@ -1,13 +1,13 @@
 /* ═══════════ 적 ═══════════ */
 function spawnEnemy(type,lane,dist,hpMul){
  const D=ENEMIES[type], A=G.aug;
- let hm=(hpMul||1)*(G.hard?1.6:1)*(A.reverse_path?2:1);
+ let hm=(hpMul||1)*(G.hard?1.6:1)*(A.reverse_path?2:1)*(D.boss?1:1/DENS);
  if(D.boss&&G.mode==='campaign') hm=(G.hard?1.6:1)*(A.reverse_path?2:1);
  const chArmor=G.mode==='chaos'?Math.floor(G.wave*.35):(G.st?G.st.ch*2:0);
  const e={type:type,D:D,lane:lane||0,dist:Math.max(0,dist||0),x:0,y:0,ang:0,prog:0,
   hp:D.hp*hm,maxHp:D.hp*hm,hpMulBase:hpMul||1,armor:D.armor+(D.boss?0:chArmor),
   shield:D.shield?D.shield.amt*hm:0,shieldMax:D.shield?D.shield.amt*hm:0,shieldT:0,
-  spd:D.spd,gold:D.gold,r:D.r,col:D.col,air:!!D.air,alive:true,hitT:0,
+  spd:D.spd,gold:D.boss?D.gold:D.gold/DENS,r:D.r,col:D.col,air:!!D.air,alive:true,hitT:0,
   slow:0,slowT:0,freeze:0,stun:0,root:0,pois:[],markT:0,markV:0,bounty:false,shred:0,crack:0,auraSlow:0,
   vis:!D.stealth,blinkCd:D.blink?D.blink.cd*.6:0,blinkT:0,jamCd:D.jam?D.jam.cd*.6:0,healCd:rnd(.2,1),
   invuln:0,age:0,wob:Math.random()*TAU,padT:0,blockT:0,wpHit:0};
