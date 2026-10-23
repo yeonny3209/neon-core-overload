@@ -3505,6 +3505,7 @@ function drawAmbient(g,T,dt){
  g.save(); g.globalCompositeOperation='lighter';
  for(let i=0;i<AMB.length;i++){
   const a=AMB[i];
+  if(G.lowfx&&(i&1)) continue;
   if(ch===0){
    a.y+=a.v*640*dt; a.x-=a.v*95*dt;
    if(a.y>H){ a.y=-24; a.x=Math.random()*(W+80); } if(a.x<-30) a.x+=W+60;
@@ -3530,7 +3531,7 @@ function drawFlow(g,T){
  for(const P of G.paths){
   if(!P.p2d){ const p=new Path2D(); P.pts.forEach((q,i)=>i?p.lineTo(q.x,q.y):p.moveTo(q.x,q.y)); P.p2d=p; }
   g.strokeStyle=hexA(acc,.5); g.lineWidth=3; g.setLineDash([2,26]); g.lineDashOffset=-T*70; g.stroke(P.p2d);
-  g.strokeStyle='rgba(255,255,255,.16)'; g.lineWidth=1.2; g.setLineDash([10,34]); g.lineDashOffset=-T*96; g.stroke(P.p2d);
+  if(!G.lowfx){ g.strokeStyle='rgba(255,255,255,.16)'; g.lineWidth=1.2; g.setLineDash([10,34]); g.lineDashOffset=-T*96; g.stroke(P.p2d); }
  }
  g.setLineDash([]); g.restore();
 }

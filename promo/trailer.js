@@ -328,7 +328,7 @@ async function adRecord(){
  await new Promise(res=>{
   const f=()=>{
    const now=performance.now(), dt=Math.min(.5,(now-last)/1000); last=now;
-   adTick(dt); if(((tNow*4)|0)!==AD.q){ AD.q=(tNow*4)|0; document.title='t='+tNow.toFixed(2)+' '+cur; }
+   AD.n=(AD.n||0)+1; adTick(dt); if(((tNow*4)|0)!==AD.q){ AD.q=(tNow*4)|0; document.title='t='+tNow.toFixed(2)+' '+cur; }
    if(tNow>=14.45&&!AD.fade){ AD.fade=1; SND.gMus.gain.setTargetAtTime(0,SND.ctx.currentTime,.18); }
    if(tNow>=AD_T){ res(); return; }
    requestAnimationFrame(f);
@@ -339,7 +339,7 @@ async function adRecord(){
  const ext=mime.indexOf('mp4')>=0?'mp4':'webm';
  const blob=new Blob(chunks,{type:mime});
  const r=await fetch('/save?name=neon-core-overload-ad.'+ext,{method:'POST',body:blob});
- document.title='SAVED '+ext+' '+blob.size+' '+mime+' '+((performance.now()-start)/1000).toFixed(1)+'s';
+ document.title='SAVED '+ext+' '+blob.size+' '+mime+' '+((performance.now()-start)/1000).toFixed(1)+'s fps='+(AD.n/((performance.now()-start)/1000)).toFixed(1);
 }
 if(/[?&]record/.test(location.search)) setTimeout(()=>adRecord().catch(e=>{ document.title='ERR '+e.message; }),1200);
 else if(/[?&]live/.test(location.search)){ let last=performance.now(); SND.init(); const f=()=>{ const n=performance.now(); adTick(Math.min(.05,(n-last)/1000)); last=n; if(tNow<AD_T) requestAnimationFrame(f); }; requestAnimationFrame(f); }
